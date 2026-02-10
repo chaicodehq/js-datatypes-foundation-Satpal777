@@ -53,17 +53,62 @@
  *   // => "RAJASTHANI THALI (Veg) - Items: dal - Rs.250.00"
  */
 export function createThaliDescription(thali) {
-  // Your code here
-}
+  if (
+    typeof thali !== 'object' ||
+    thali === null ||
+    typeof thali.name !== 'string' ||
+    !Array.isArray(thali.items) ||
+    typeof thali.price !== 'number' ||
+    typeof thali.isVeg !== 'boolean'
+  ) {
+    return ""
+  }
 
+  return `${thali.name.toUpperCase()} (${thali.isVeg ? 'Veg' : 'Non-Veg'}) - Items: ${thali.items.join(', ')} - Rs.${thali.price.toFixed(2)}`
+}
 export function getThaliStats(thalis) {
-  // Your code here
+  if (!Array.isArray(thalis) || !thalis.length) return null
+
+  const vegCount = thalis.filter(ele => ele.isVeg).length
+  const prices = thalis.map(ele => ele.price)
+
+  return {
+    totalThalis: thalis.length,
+    vegCount,
+    nonVegCount: thalis.length - vegCount,
+    avgPrice: (prices.reduce((acc, price) => acc + price, 0) / thalis.length).toFixed(2),
+    cheapest: Math.min(...prices),
+    costliest: Math.max(...prices),
+    names: thalis.map(ele => ele.name)
+  }
 }
 
 export function searchThaliMenu(thalis, query) {
-  // Your code here
+  if (!Array.isArray(thalis) || typeof query !== 'string') return []
+
+  const q = query.toLowerCase()
+
+  return thalis.filter(({ name, items }) =>
+    typeof name === 'string' &&
+    (
+      name.toLowerCase().includes(q) ||
+      (Array.isArray(items) && items.some(item =>
+        typeof item === 'string' && item.toLowerCase().includes(q)
+      ))
+    )
+  )
 }
 
 export function generateThaliReceipt(customerName, thalis) {
-  // Your code here
+  if (typeof customerName !== 'string' || !Array.isArray(thalis) || !thalis.length) {
+    return ""
+  }
+
+  const lines = thalis
+    .map(thali => `- ${thali.name} x Rs.${thali.price}`)
+    .join("\n")
+
+  const total = thalis.reduce((acc, thali) => acc + thali.price, 0)
+
+  return `THALI RECEIPT\n---\nCustomer: ${customerName.toUpperCase()}\n${lines}\n---\nTotal: Rs.${total}\nItems: ${thalis.length}`
 }
