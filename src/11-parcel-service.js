@@ -52,21 +52,32 @@
  *   stringToChars("Dak")                  // => ["D", "a", "k"]
  */
 export function parcelToJSON(parcel) {
-  // Your code here
+  try {
+    if (parcel === undefined) return ""
+    return JSON.stringify(parcel)
+  } catch {
+    return ""
+  }
 }
 
 export function jsonToParcel(jsonString) {
-  // Your code here
+  try {
+    if (typeof jsonString !== 'string' || jsonString === undefined) return null;
+    return JSON.parse(jsonString)
+  } catch {
+    return null
+  }
 }
 
 export function convertToString(value) {
-  // Your code here
+  return String(value);
 }
 
 export function convertToNumber(value) {
-  // Your code here
+  return Number(value);
 }
 
 export function stringToChars(str) {
-  // Your code here
+  const arr = typeof str === 'string' ? Array.from(str) : [];
+  return arr;
 }
